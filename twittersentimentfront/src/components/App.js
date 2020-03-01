@@ -3,6 +3,7 @@ import axios from 'axios';
 import TweetForm from './TweetForm';
 import ReactSpeedometer from "react-d3-speedometer";
 import CanvasJSReact from './canvasjs.react';
+import MapComponent from './MapComponent';
 //var CanvasJSReact = require('./canvasjs.react');
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
@@ -113,15 +114,6 @@ class App extends React.Component{
         )
     })
   }
-/* 
-Anger 
-Joy
-Fear
-Sadness
-Analytical 
-Confident
-Tentative
-*/
   renderForm = () => {
       return(
         <div>
@@ -134,7 +126,7 @@ Tentative
         animationEnabled: true,
         theme: "light2",
         title:{
-            text: "Tones added through tweets"
+            text: "Tones analyzed"
         },
         axisX: {
             title: "Tone",
@@ -163,7 +155,21 @@ Tentative
             <CanvasJSChart options = {options}/>
         </div>
     );
-}
+    }
+
+    renderMap = () => {
+        return(
+            <div>
+                <MapComponent 
+                    tweets={this.state.tweets} 
+                    googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyBI9HxuAEOKmctXFBSLSM_DrlLmnmE1a1c"
+                    loadingElement={<div style={{ height: `100%` }} />}
+                    containerElement={<div style={{ height: `400px` }} />}
+                    mapElement={<div style={{ height: `100%` }} />}
+                />
+            </div>
+        )
+    }
 
   render(){
       if(this.state.submitClicked === false){
@@ -181,11 +187,18 @@ Tentative
                     value={this.state.overall} 
                     minValue={-1} 
                     maxValue={1}
+                    width={500}
+                    height={400}
+                    
                     />
                 </div>
                 <div className="chart">
                     {this.renderChart()}
                 </div>
+                <div className="maps">
+                    {this.renderMap()}
+                </div>
+
                 <div className="container">
                     <ul className="social-posts">
                         {this.returnList()}

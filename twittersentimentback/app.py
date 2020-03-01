@@ -6,8 +6,7 @@ from textblob.sentiments import NaiveBayesAnalyzer
 from ibm_watson import ToneAnalyzerV3
 from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import json
-
-
+from geopy.geocoders import Nominatim
 
 CONSUMER_KEY = "idwLB25vRVB4z0h1kyuTUogh3"
 CONSUMER_SECRET = "qU637eORgneAiCxpkzLSp5jFdz8ghM3NcWLouFpwdmPoQ78rq0"
@@ -17,6 +16,7 @@ ACCESS_SECRET = "pHgGhFXVUE0ERDCjULzL2CSfvFUpLxnB8jRaqL2Fs5tZd"
 t = Twitter(
     auth=OAuth(ACCESS_TOKEN, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
 )
+locator = Nominatim(user_agent="my_geocode")
 
 app = Flask(__name__)
 
@@ -38,7 +38,7 @@ def returnSentiment():
 
 
 if __name__ == '__main__':
-    app.run(port=3000, debug=True, host='0.0.0.0')
+    app.run(port=3001, debug=True, host='0.0.0.0')
 
 def getTweets(sub):
     def generate():
@@ -48,6 +48,7 @@ def getTweets(sub):
             tweet = x['statuses'][i]
             tweet_text = json.dumps({
                 "profile_URL": tweet['user']['profile_image_url'],
+                "location": getCoords(tweet['user']['location']),
                 "user": tweet['user']['name'],
                 "creation": tweet['created_at'],
                 "tweet": tweet['full_text'],
@@ -59,7 +60,23 @@ def getTweets(sub):
 
     return Response(generate())
 
-            
+def getCoords(location):
+    l = locator.geocode(location)
+    try:
+        locations = [
+            l.latitude, 
+            l.longitude
+        ]
+        return locations
+    except:
+        l = locator.geocode("New York")
+        locations = [
+            l.latitude, 
+            l.longitude
+        ]
+        return locations
+
+    
 def getSentiment(tweet):
     blob = TextBlob(tweet, analyzer=NaiveBayesAnalyzer())
     return blob.sentiment

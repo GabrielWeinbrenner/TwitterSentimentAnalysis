@@ -4,12 +4,12 @@ font-family: 'Catamaran', sans-serif ;
 
 }
 .inputs {
-font-size: 10px;
-font-family: 'Catamaran', sans-serif;
-margin: 0;
-display: grid;
-height: 100vh;
-place-items: center;
+  font-size: 10px;
+  font-family: 'Catamaran', sans-serif;
+  margin: 0;
+  display: grid;
+  height: 100vh;
+  place-items: center;
 }
 
 .c-checkbox {
@@ -144,20 +144,34 @@ background-color: #ff7b73;
     text-align: center;
 }
 .speedometer{
+    height: 200px;
+    width: 300px;
     margin: 40px !important;
+    margin-left: 20px !important;
+    margin-bottom: 40px !important;
+    float: left;
+    display: inline-block !important;
 }
 .container{
-    display: flex;
-    flex-direction: column;
     margin: 20px;
+    float: left;
+    top: 80%;
+    left: 70%;
+    transform: translate(5%,30%); 
 
+}
+.maps{
+  margin-top: 300px;
+  margin-right: 15px;
+  float:right;
+  width:50%;
 }
 .chart{
     display: block;
     height: 100px;
     width: 50%;
     float: right;
-    margin: 10px;
+    margin: 15px;
 }
 * {margin: 0; padding: 0;}
 
