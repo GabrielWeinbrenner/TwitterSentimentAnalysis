@@ -18,16 +18,18 @@ class TweetForm extends React.Component{
     }
     render(){
         return(
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <div>
-                        <label for="typeInput">
-                        Type:          
-                        </label>
-                        <input autoComplete="off" id="typeInput" type="text" value={this.state.typeVal} onChange={this.handleTypeChange}></input>
-                    </div>
-                    <button type="submit" value="Submit">Submit</button>
-                </form>
+
+            <div className="inputs">
+            <input className="c-checkbox" type="checkbox" id="checkbox" />
+            <div className="c-formContainer">
+              <form className="c-form" onSubmit={this.handleSubmit}>
+                <input id="typeInput" type="text" value={this.state.typeVal} onChange={this.handleTypeChange} type="search" className="c-form__input" placeholder="Keyword" />
+                <label className="c-form__buttonLabel" for="checkbox">
+                  <button className="c-form__button" type="submit">Send</button>
+                </label>
+                <label className="c-form__toggle" for="checkbox" data-title="Enter Keyword"></label>
+              </form>
+            </div>
             </div>
         )
     }
