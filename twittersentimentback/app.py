@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from twitter import *
 import requests
 from textblob import TextBlob
@@ -41,22 +41,24 @@ if __name__ == '__main__':
     app.run(port=3000, debug=True, host='0.0.0.0')
 
 def getTweets(sub):
-    x = t.search.tweets(q=sub,tweet_mode='extended')
+    def generate():
+        x = t.search.tweets(q=sub,tweet_mode='extended')
 
-    sentTweets = []
-    for i in range(0, len(x['statuses'])):
-        twitterTweet = x['statuses'][i]
-        
-        tweets = json.dumps({
-            "user": twitterTweet['user']['name'],
-            "creation": twitterTweet['created_at'],
-            "tweet": twitterTweet['full_text'],
-            "sentiment": getSentiment(twitterTweet['full_text']),
-            "tone": getTone({twitterTweet['full_text']})
+        for i in range(0, len(x['statuses'])):
+            twitterTweet = x['statuses'][i]
+            
+            tweets = json.dumps({
+                "user": twitterTweet['user']['name'],
+                "creation": twitterTweet['created_at'],
+                "tweet": twitterTweet['full_text'],
+                "sentiment": getSentiment(twitterTweet['full_text'])
+            })
 
-        })
-        setTweets.append(tweets)
-    return setTweets
+            yield tweets
+
+    return Response(generate())
+
+            
 def getSentiment(tweet):
     blob = TextBlob(tweet, analyzer=NaiveBayesAnalyzer())
     return blob.sentiment
