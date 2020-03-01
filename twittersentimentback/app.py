@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from twitter import *
+import requests
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
 from ibm_watson import ToneAnalyzerV3
@@ -72,6 +73,9 @@ def getTone():
     #set dat to twitter json
     #json.dumps() to convert json to srtring
     #data = open('/Users/dz/Downloads/tone.json', 'rb').read()
-    #data = showtweets()
+    data = getTweets(sub)
     response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=data, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
     return response.json()
+
+if __name__ == '__main__':
+    app.run()
