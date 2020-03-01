@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from twitter import *
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
+from ibm_watson import ToneAnalyzerV3
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import json
 
 
@@ -17,6 +19,12 @@ t = Twitter(
 sentimentAnalysis = []
 
 app = Flask(__name__)
+
+authenticator = IAMAuthenticator('83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8')
+tone_analyzer = ToneAnalyzerV3(
+    version='2017-09-21',
+    authenticator=authenticator
+)
 
 
 @app.route('/search', methods=['GET'])
@@ -53,4 +61,17 @@ def getSentiment(tweet):
     blob = TextBlob(tweet, analyzer=NaiveBayesAnalyzer())
     return blob.sentiment
 
+def getTone():
+    headers = {
+    'Content-Type': 'application/json',
+    }
 
+    params = (
+        ('version', '2017-09-21'),
+    )   
+    #set dat to twitter json
+    #json.dumps() to convert json to srtring
+    #data = open('/Users/dz/Downloads/tone.json', 'rb').read()
+    #data = showtweets()
+    response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=data, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
+    return response.json()
