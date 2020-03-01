@@ -71,9 +71,6 @@ def getTone(tweet):
     params = (
         ('version', '2017-09-21'),
     )   
-    #set dat to twitter json
-    #json.dumps() to convert json to srtring
-    #data = open('/Users/dz/Downloads/tone.json', 'rb').read()
     response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=tweet, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
     json = response.json()
     return json

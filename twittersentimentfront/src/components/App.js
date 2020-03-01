@@ -1,11 +1,14 @@
 import React from 'react';
 import axios from 'axios';
-import httpAdapter from 'axios/lib/adapters/http';
 import TweetForm from './TweetForm';
+import ReactSpeedometer from "react-d3-speedometer";
 
 class App extends React.Component{
   state = {
-    tweets: []
+    tweets: [],
+    positiveSentiment: 0,
+    negativeSentiment: 0,
+    overall: 0.5
   }
   getTweets(subject){
     let lengthOfResponse = 0;
@@ -17,10 +20,16 @@ class App extends React.Component{
             const currentTweet = JSON.parse(event.target.response.substring(pastLength));
 
             console.log(currentTweet)
+
             this.setState(({ tweets, ...rest }) => ({
                 tweets: tweets.concat([currentTweet]),
-                ...rest
-            }))
+                ...rest,
+                positiveSentiment: (this.state.positiveSentiment + currentTweet.sentiment[1]),
+                negativeSentiment: this.state.negativeSentiment + currentTweet.sentiment[2],
+                overall: Math.abs(this.state.positiveSentiment - this.state.negativeSentiment)
+            }),
+
+            )
             console.log(this.state)
         }
     }).then(response => console.log('Done!'))
@@ -63,6 +72,8 @@ class App extends React.Component{
   }
   returnList = () => {
     return this.state.tweets.map(tweet => {
+
+        console.log(this.state.overall);
         return (
             <div className="item" key={tweet.id}>
                 <div>
@@ -79,6 +90,13 @@ class App extends React.Component{
         <div>
           <TweetForm sub={this.handleSubmit}/>
           {this.returnList()}
+          <ReactSpeedometer 
+            needleTransitionDuration={10000} 
+            needleTransition="easeElastic" 
+            value={this.state.overall} 
+            minValue={0} 
+            maxValue={1}
+        />
         </div>
     );
   }
