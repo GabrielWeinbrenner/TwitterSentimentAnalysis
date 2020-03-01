@@ -17,7 +17,6 @@ ACCESS_SECRET = "pHgGhFXVUE0ERDCjULzL2CSfvFUpLxnB8jRaqL2Fs5tZd"
 t = Twitter(
     auth=OAuth(ACCESS_TOKEN, ACCESS_SECRET, CONSUMER_KEY, CONSUMER_SECRET)
 )
-sentimentAnalysis = []
 
 app = Flask(__name__)
 
@@ -31,11 +30,10 @@ tone_analyzer = ToneAnalyzerV3(
 @app.route('/search', methods=['GET'])
 def returnSentiment():
     subject = request.args.get('subject', 'My Default')
-    with open("trumpTweets.json", 'r') as myfile:
-        data=myfile.read()
-
-
-    return data
+    # with open("trumpTweets.json", 'r') as myfile:
+    #     data=myfile.read()
+    # return data
+    return getTweets(subject)
  
 
 
@@ -45,7 +43,7 @@ if __name__ == '__main__':
 def getTweets(sub):
     x = t.search.tweets(q=sub,tweet_mode='extended')
 
-    tweets = {}
+    sentTweets = []
     for i in range(0, len(x['statuses'])):
         twitterTweet = x['statuses'][i]
         
@@ -53,16 +51,17 @@ def getTweets(sub):
             "user": twitterTweet['user']['name'],
             "creation": twitterTweet['created_at'],
             "tweet": twitterTweet['full_text'],
-            "sentiment": getSentiment(twitterTweet['full_text'])
-        })
-        print(tweets)
-    return tweets
+            "sentiment": getSentiment(twitterTweet['full_text']),
+            "tone": getTone({twitterTweet['full_text']})
 
+        })
+        setTweets.append(tweets)
+    return setTweets
 def getSentiment(tweet):
     blob = TextBlob(tweet, analyzer=NaiveBayesAnalyzer())
     return blob.sentiment
 
-def getTone():
+def getTone(tweet):
     headers = {
     'Content-Type': 'application/json',
     }
@@ -73,9 +72,5 @@ def getTone():
     #set dat to twitter json
     #json.dumps() to convert json to srtring
     #data = open('/Users/dz/Downloads/tone.json', 'rb').read()
-    data = getTweets(sub)
-    response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=data, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
+    response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=tweet, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
     return response.json()
-
-if __name__ == '__main__':
-    app.run()
