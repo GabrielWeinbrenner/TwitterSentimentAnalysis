@@ -2,6 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import TweetForm from './TweetForm';
 import ReactSpeedometer from "react-d3-speedometer";
+import CanvasJSReact from './canvasjs.react';
+//var CanvasJSReact = require('./canvasjs.react');
+var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 class App extends React.Component{
   state = {
@@ -125,6 +129,42 @@ Tentative
         </div>
       );
   }
+  renderChart = () =>{
+    const options = {
+        animationEnabled: true,
+        theme: "light2",
+        title:{
+            text: "Tones added through tweets"
+        },
+        axisX: {
+            title: "Tone",
+            reversed: true,
+        },
+        axisY: {
+            title: "Amount of Tweets",
+            labelFormatter: this.addSymbols
+        },
+
+        data: [{
+            type: "bar",
+            dataPoints: [
+                { y:  this.state.Anger, label: "Anger" },
+                { y:  this.state.Joy, label: "Joy" },
+                { y:  this.state.Fear, label: "Fear" },
+                { y:  this.state.Sadness, label: "Sadness" },
+                { y:  this.state.Analytical, label: "Analytical" },
+                { y:  this.state.Confident, label: "Confident" },
+                { y:  this.state.Tentative, label: "Tentative" }
+            ]
+        }]
+    }
+    return (
+        <div>
+            <CanvasJSChart options = {options}/>
+        </div>
+    );
+}
+
   render(){
       if(this.state.submitClicked === false){
         return(
@@ -132,7 +172,7 @@ Tentative
         );
       }else{
         return(
-            <div>
+            <div className="containing">
                 <h1 className="heading-tweets">Searching tweets for {this.state.subject ? this.state.subject : "...."}</h1>
                 <div className="speedometer"> 
                     <ReactSpeedometer 
@@ -142,6 +182,9 @@ Tentative
                     minValue={-1} 
                     maxValue={1}
                     />
+                </div>
+                <div className="chart">
+                    {this.renderChart()}
                 </div>
                 <div className="container">
                     <ul className="social-posts">

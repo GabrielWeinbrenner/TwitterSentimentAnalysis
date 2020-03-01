@@ -152,7 +152,13 @@ background-color: #ff7b73;
     margin: 20px;
 
 }
-
+.chart{
+    display: block;
+    height: 100px;
+    width: 50%;
+    float: right;
+    margin: 10px;
+}
 * {margin: 0; padding: 0;}
 
 .social-posts {
