@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, Response
 from twitter import *
+import twitter
 import requests
 from textblob import TextBlob
 from textblob.sentiments import NaiveBayesAnalyzer
@@ -59,11 +60,25 @@ def getTweets(sub):
     return Response(generate())
 
             
+    x = t.search.tweets(q=sub,tweet_mode='extended')
+
+    sentTweets = []
+    for i in range(0, len(x['statuses'])):
+        twitterTweet = x['statuses'][i]
+        
+        tweets = json.dumps({
+            "user": twitterTweet['user']['name'],
+            "creation": twitterTweet['created_at'],
+            "sentiment": getSentiment(twitterTweet['full_text'])
+
+        })
+        sentTweets.append(tweets)
+    return sentTweets
 def getSentiment(tweet):
     blob = TextBlob(tweet, analyzer=NaiveBayesAnalyzer())
     return blob.sentiment
 
-def getTone(tweet):
+def getTone():
     headers = {
     'Content-Type': 'application/json',
     }
@@ -74,3 +89,6 @@ def getTone(tweet):
     response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=tweet, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
     json = response.json()
     return json
+    data = open('/Users/dz/Downloads/tone.json', 'rb').read()
+    response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3  /tone', headers=headers, params=params, data=data, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
+    return response.json()
