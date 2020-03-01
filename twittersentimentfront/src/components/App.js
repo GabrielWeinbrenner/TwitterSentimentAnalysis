@@ -16,12 +16,12 @@ class App extends React.Component{
             lengthOfResponse = event.target.response.length;
             const currentTweet = JSON.parse(event.target.response.substring(pastLength));
 
-            // console.log(currentTweet)
+            console.log(currentTweet)
             this.setState(({ tweets, ...rest }) => ({
                 tweets: tweets.concat([currentTweet]),
                 ...rest
             }))
-            // console.log(this.state)
+            console.log(this.state)
         }
     }).then(response => console.log('Done!'))
     // axios.get("http://127.0.0.1:5000/search", {responseType: 'stream', adapter: httpAdapter})

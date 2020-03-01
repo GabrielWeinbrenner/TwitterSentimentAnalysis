@@ -45,16 +45,16 @@ def getTweets(sub):
         x = t.search.tweets(q=sub,tweet_mode='extended')
 
         for i in range(0, len(x['statuses'])):
-            twitterTweet = x['statuses'][i]
-            
-            tweets = json.dumps({
-                "user": twitterTweet['user']['name'],
-                "creation": twitterTweet['created_at'],
-                "tweet": twitterTweet['full_text'],
-                "sentiment": getSentiment(twitterTweet['full_text'])
+            tweet = x['statuses'][i]
+            tweet_text = json.dumps({
+                "user": tweet['user']['name'],
+                "creation": tweet['created_at'],
+                "tweet": tweet['full_text'],
+                "sentiment": getSentiment(tweet['full_text']),
+                "tone": getTone(json.dumps({ 'text': tweet['full_text'] }))['document_tone']['tones']
             })
 
-            yield tweets
+            yield tweet_text
 
     return Response(generate())
 
@@ -75,4 +75,5 @@ def getTone(tweet):
     #json.dumps() to convert json to srtring
     #data = open('/Users/dz/Downloads/tone.json', 'rb').read()
     response = requests.post('https://api.us-east.tone-analyzer.watson.cloud.ibm.com/instances/2cef28f5-fb6e-4229-8a35-2728190981a5/v3/tone', headers=headers, params=params, data=tweet, auth=('apikey', '83BDRwZHLtHmvuZzTGkCE3ESOCuLS3zLs8lhzWXg2YT8'))
-    return response.json()
+    json = response.json()
+    return json
