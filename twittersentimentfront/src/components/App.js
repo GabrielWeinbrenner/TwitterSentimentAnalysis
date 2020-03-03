@@ -179,7 +179,7 @@ class App extends React.Component{
       }else{
         return(
             <div className="containing">
-                <h1 className="heading-tweets">Searching tweets for {this.state.subject ? this.state.subject : "...."}</h1>
+                <h1 className="heading-tweets">Analyzing {this.state.subject ? this.state.subject : "...." } tweets</h1>
                 <div className="speedometer"> 
                     <ReactSpeedometer 
                     needleTransitionDuration={10000} 

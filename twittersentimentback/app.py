@@ -55,7 +55,7 @@ def getTweets(sub):
                 "sentiment": getSentiment(tweet['full_text']),
                 "tone": getTone(json.dumps({ 'text': tweet['full_text'] }))['document_tone']['tones']
             })
-
+            print(tweet_text)
             yield tweet_text
 
     return Response(generate())
