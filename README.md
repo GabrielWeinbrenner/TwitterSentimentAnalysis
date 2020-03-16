@@ -13,4 +13,8 @@ Our project is designed to help our users analyze users emotion to a topic. For 
 # Links
 [Devpost](https://www.google.com)
 # Screenshots
-![alt text](https://github.com/GabrielWeinbrenner/TwitterSentimentAnalysis/ "Logo Title Text 1")
++ Tweets
+![alt text](https://github.com/GabrielWeinbrenner/TwitterSentimentAnalysis/blob/master/Twitter1.png "Tweets")
++ Tweet Analysis
+![alt text](https://github.com/GabrielWeinbrenner/TwitterSentimentAnalysis/blob/master/Twitter2.png "Analysis")
+
